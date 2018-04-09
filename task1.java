@@ -18,14 +18,14 @@ class Task1
             BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
         
             String userInput;
-            while((userInput = keyboardInput.readLine()) != null)
-            {
-                //create thread from CustomRunnable class
-                Thread firstThread = new Thread(new CustomRunnable(userInput));
-                //start thread
-                firstThread.start();
-                break;
-            }
+            userInput = keyboardInput.readLine();
+            
+            //create thread from CustomRunnable class
+            Thread firstThread = new Thread(new CustomRunnable(userInput));
+            
+            //start thread
+            firstThread.start();
+            
             //close keyboard input
             keyboardInput.close();
         }catch(IOException ex)
