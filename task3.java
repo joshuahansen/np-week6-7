@@ -5,8 +5,8 @@ import java.util.zip.*;
 
 /**
 *Task 3
-*Continue to get input until user enters "X"
-* print after each line
+* Continue to get input until user enters "X"
+* Print after each line
 **/
 
 class Task3
@@ -40,7 +40,12 @@ class InputThread extends Thread
             {
                 Global.string = userInput;
             
-                this.interrupt();
+                try {
+                    this.wait();
+                }catch(InterruptedException e)
+                {
+                }
+                Global.printerThread.notify();
                 userInput = keyboardInput.readLine();
             }   
             keyboardInput.close();
@@ -66,7 +71,12 @@ class PrinterThread extends Thread
             if(Global.inputThread.isInterrupted())
             {
                 System.out.println("Thread Input: " + Global.string);
-                this.interrupt();
+                try {
+                    this.wait();
+                }catch(InterruptedException e)
+                {
+                }
+                Global.inputThread.notify();
             }
             if(!Global.inputThread.isAlive())
             {
