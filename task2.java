@@ -15,38 +15,24 @@ class Task2
 {
     public static void main(String args[])
     {
+        //create thread from CustomRunnable class
+        Thread inputThread = new InputThread();
+        Thread printerThread = new PrinterThread();
+            
+        //start thread
+        inputThread.start();
+            
+        /*
+        * have printer wait for inputThread to be completed
+        * before running.
+        */
         try {
-            System.out.println("Enter input:");
-            BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
-        
-            String userInput;
-            userInput = keyboardInput.readLine();
-            
-            //create thread from CustomRunnable class
-            Thread inputThread = new InputThread(userInput);
-            Thread printerThread = new PrinterThread();
-            
-            //start thread
-            inputThread.start();
-            
-            /*
-            * have printer wait for inputThread to be completed
-            * before running.
-            */
-            try {
-                inputThread.join();
-            }catch(InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            printerThread.start();
-            
-            //close keyboard input
-            keyboardInput.close();
-        }catch(IOException ex)
+            inputThread.join();
+        }catch(InterruptedException e)
         {
-            System.out.println("Error with Input/Output: " + ex);
+            e.printStackTrace();
         }
+        printerThread.start();
     }
 }
 
@@ -56,17 +42,23 @@ class Task2
 **/
 class InputThread extends Thread
 {
-    private String input;
-    //constructor for thread sets keyboard input to global.
-    public InputThread(String input)
-    {
-        this.input = input;
-    }
     //override runnable run fuction to print out user input
     @Override
     public void run()
     {
-        Global.string = this.input;
+        try {
+            System.out.println("Enter input:");
+            BufferedReader keyboardInput = new BufferedReader(new InputStreamReader(System.in));
+        
+            String userInput;
+            userInput = keyboardInput.readLine();
+            Global.string = userInput;
+            
+            keyboardInput.close();
+        }catch(IOException ex)
+        {
+            System.out.println("Error with Input/Output: " + ex);
+        }
     }
 }
 
