@@ -36,17 +36,18 @@ class InputThread extends Thread
         
             String userInput;
             userInput = keyboardInput.readLine();
+            //loop while user does not enter X
             while(!userInput.equals("X"))
             {
                 Global.string = userInput;
-            
-                try {
-                    this.wait();
-                }catch(InterruptedException e)
+                interrupt();
+                //if printer has finished printing get next input
+                if(Global.printerThread.isInterrupted())
                 {
+                    interrupted();
+                    System.out.println("Enter input:");
+                    userInput = keyboardInput.readLine();
                 }
-                Global.printerThread.notify();
-                userInput = keyboardInput.readLine();
             }   
             keyboardInput.close();
         }catch(IOException ex)
@@ -63,24 +64,21 @@ class PrinterThread extends Thread
     public void run()
     {
         /*
-        * have printer wait for inputThread to be intrupted
-        * before running.
+        * run while input Thread is still active
         */
-        while(true)
+        while(Global.inputThread.isAlive())
         {
+            //print results after input thread has finished recieving input
             if(Global.inputThread.isInterrupted())
             {
-                System.out.println("Thread Input: " + Global.string);
+                System.out.println("Printer Thread: " + Global.string);
+                interrupt();
+                //sleep thread to allow any overlap to clear
                 try {
-                    this.wait();
+                    Thread.sleep(500);
                 }catch(InterruptedException e)
                 {
                 }
-                Global.inputThread.notify();
-            }
-            if(!Global.inputThread.isAlive())
-            {
-                break;
             }
         }
     }

@@ -17,7 +17,7 @@ class Task2
     {
         //create thread from CustomRunnable class
         Thread inputThread = new InputThread();
-        Thread printerThread = new PrinterThread();
+        Thread printerThread = new PrinterThread("Main Program");
             
         //start thread
         inputThread.start();
@@ -37,8 +37,8 @@ class Task2
 }
 
 /**
-*Custom runnable class
-*prints out user input set in constructor
+*Custom thread class
+*Sets global string from user input
 **/
 class InputThread extends Thread
 {
@@ -61,14 +61,24 @@ class InputThread extends Thread
         }
     }
 }
-
+/**
+*Custom Thread class
+*Prints global string
+*/
 class PrinterThread extends Thread
 {
+    private String mainInput;
+
+    public PrinterThread(String input)
+    {
+        this.mainInput = input;
+    }
     //print out global input string
     @Override
     public void run()
     {
-        System.out.println("Thread Input: " + Global.string);
+        System.out.println("Thread Printer: " + mainInput);
+        System.out.println("Thread Printer: " + Global.string);
     }
 }
 /**
